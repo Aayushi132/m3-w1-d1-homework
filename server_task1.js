@@ -1,24 +1,32 @@
-const http = require("http");
+import express  from 'express';
+const app = express;
+import fs from 'fs';
+import http from 'http';
+const PORT= process.env.PORT || 5000
+const server = http.createServer((req,res)=>{
+    res.writeHead(200,"ok",{'content-type':'text/html'})
 
-const server = http.createServer(function (req, res) {
-  if (req.url == "/") {
-    res.writeHead(200, { "Content-Type": "text/html" });
 
-    res.write("<html><body><p><b>Home Page.</b></p></body></html>");
-    res.end();
-  } else if (req.url == "/contact") {
-    res.writeHead(200, { "Content-Type": "text/html" });
-    res.write("<html><body><p><b>Contact Page.</b></p></body></html>");
-    res.end();
-  } else if (req.url == "/about") {
-    res.writeHead(200, { "Content-Type": "text/html" });
-    res.write("<html><body><p><b>About Page.</b></p></body></html>");
-    res.end();
-  } else {
-    res.end("Invalid Request!");
-  }
-});
 
-server.listen(5000);
-
-console.log("server running on port 5000");
+if (req.url==='/'){
+    fs.readFile('./views/home.html',(error,data)=>{
+        if(error) throw error;
+        res.end(data);
+    });
+}
+else if (req.url==='/about'){
+    fs.readFile('./views/about.html',(error,data)=>{
+        if(error) throw error;
+        res.end(data);
+    });
+}
+else{
+    fs.readFile('./views/contact.html',(error,data)=>{
+        if(error) throw error;
+        res.end(data);
+    });
+}
+})
+server.listen(PORT,()=>{
+    console.log('server is running at localhost:5000')
+})
